@@ -13,7 +13,7 @@ WORKDIR /
 
 RUN protoc object_detection/protos/*.proto --python_out=.
 
-ENV MODELNAME=faster_rcnn_resnet101_coco_11_06_2017
+ENV MODELNAME=ssd_inception_v2_coco_11_06_2017
 
 ADD http://download.tensorflow.org/models/object_detection/$MODELNAME.tar.gz /
 

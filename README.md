@@ -1,42 +1,48 @@
-# TensorFlow Models
+# TensorFlow Models (REST API wrapper)
+Simple REST app for image classification using models pre-trained on the COCO dataset.
+If you want to change the model used by the app just change the `MODELNAME` variable in the `Dockerfile`.
+List of available pre-trained object detection models can be found under [Tensorflow detection model zoo](https://github.com/tensorflow/models/blob/master/object_detection/g3doc/detection_model_zoo.md)
 
-This repository contains machine learning models implemented in
-[TensorFlow](https://tensorflow.org). The models are maintained by their
-respective authors. To propose a model for inclusion, please submit a pull
-request.
+## Run (Docker)
+```
+docker build -t coco-model .
+docker run -p 5000:5000 coco-model
+# test with: curl -v http://localhost:5000/detect?imageUrl=<imageUrl>, e.g.
+curl -v http://localhost:5000/detect?imageUrl=http://expressioncoffins.com.au/wp-content/uploads/2012/06/RED-TRACTOR1.jpg
+```
+You should get the following response:
+```
+{
+   "imageUrl":"http://expressioncoffins.com.au/wp-content/uploads/2012/06/RED-TRACTOR1.jpg",
+   "results":[
+      {
+         "score":0.899250328540802,
+         "label":"truck"
+      },
+      {
+         "score":0.582574725151062,
+         "label":"person"
+      },
+      {
+         "score":0.0435677208006382,
+         "label":"umbrella"
+      },
+      {
+         "score":0.029505163431167603,
+         "label":"kite"
+      },
+      {
+         "score":0.021187135949730873,
+         "label":"clock"
+      }
+   ]
+}
+```
 
-Currently, the models are compatible with TensorFlow 1.0 or later. If you are
-running TensorFlow 0.12 or earlier, please
-[upgrade your installation](https://www.tensorflow.org/install).
-
-
-## Models
-- [adversarial_crypto](adversarial_crypto): protecting communications with adversarial neural cryptography.
-- [adversarial_text](adversarial_text): semi-supervised sequence learning with adversarial training.
-- [attention_ocr](attention_ocr): a model for real-world image text extraction.
-- [autoencoder](autoencoder): various autoencoders.
-- [cognitive_mapping_and_planning](cognitive_mapping_and_planning): implementation of a spatial memory based mapping and planning architecture for visual navigation.
-- [compression](compression): compressing and decompressing images using a pre-trained Residual GRU network.
-- [differential_privacy](differential_privacy): privacy-preserving student models from multiple teachers.
-- [domain_adaptation](domain_adaptation): domain separation networks.
-- [im2txt](im2txt): image-to-text neural network for image captioning.
-- [inception](inception): deep convolutional networks for computer vision.
-- [learning_to_remember_rare_events](learning_to_remember_rare_events):  a large-scale life-long memory module for use in deep learning.
-- [lfads](lfads): sequential variational autoencoder for analyzing neuroscience data.
-- [lm_1b](lm_1b): language modeling on the one billion word benchmark.
-- [namignizer](namignizer): recognize and generate names.
-- [neural_gpu](neural_gpu): highly parallel neural computer.
-- [neural_programmer](neural_programmer): neural network augmented with logic and mathematic operations.
-- [next_frame_prediction](next_frame_prediction): probabilistic future frame synthesis via cross convolutional networks.
-- [object_detection](object_detection): localizing and identifying multiple objects in a single image.
-- [real_nvp](real_nvp): density estimation using real-valued non-volume preserving (real NVP) transformations.
-- [resnet](resnet): deep and wide residual networks.
-- [skip_thoughts](skip_thoughts): recurrent neural network sentence-to-vector encoder.
-- [slim](slim): image classification models in TF-Slim.
-- [street](street): identify the name of a street (in France) from an image using a Deep RNN.
-- [swivel](swivel): the Swivel algorithm for generating word embeddings.
-- [syntaxnet](syntaxnet): neural models of natural language syntax.
-- [textsum](textsum): sequence-to-sequence with attention model for text summarization.
-- [transformer](transformer): spatial transformer network, which allows the spatial manipulation of data within the network.
-- [tutorials](tutorials): models described in the [TensorFlow tutorials](https://www.tensorflow.org/tutorials/).
-- [video_prediction](video_prediction): predicting future video frames with neural advection.
+## Run(GCP)
+```
+docker build -t eu.gcr.io/bw-dev-analytics0/coco-model .
+gcloud docker -- push eu.gcr.io/bw-dev-analytics0/coco-model
+kubectl run coco-model --image=eu.gcr.io/$PROJECT_NAME/coco-model --port=5000 --replicas=2
+kubectl expose deployment coco-model --type=LoadBalancer --name=coco-model
+```
